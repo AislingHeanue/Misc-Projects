@@ -3,11 +3,11 @@ from copy import deepcopy
 import pygame
 import random
 import time
-
-pixelSize = 8
+import sys
 
 class Pixel:
-    def __init__(self,state,x,y):
+    def __init__(self,state,x,y,pixelSize):
+        self.pixelSize = pixelSize
         self.state = state
         self.deadage = 10
         self.x = x
@@ -23,7 +23,7 @@ class Pixel:
     def checkState(self):
         return self.state
     def show(self,t):
-        smolbox = pygame.Surface((pixelSize,pixelSize))
+        smolbox = pygame.Surface((self.pixelSize,self.pixelSize))
         if self.state:
             smolbox.fill((255,255,255))
         elif self.deadage < 10:
@@ -33,21 +33,25 @@ class Pixel:
             smolbox.fill((0,0,0))
         return smolbox
 
-def Game(path="",padding = pixelSize):
+def Game(path="",pixelSize=8):
     t=0
+    tempPixelSize = input("What is the size of each cell? (pixels: default = 8)\n")
+    if tempPixelSize != "":
+        pixelSize = int(tempPixelSize)
+    else:
+        pixelSize = 8
     if path:
+        padding = 20
         pathdict = {".":"0","O":"1"}
         f = open(path, "r")
         code = f.readlines()
-        width = 2*padding
-        height = 2*padding
+        width = 0
+        height = 2*padding + 2
         for line in code:
             if line[0] != "!":
                 height += 1
-                if len(line)+2*padding > width:
-                    width = len(line)+2*padding
-        height += 2
-        width += 2
+                if len(line)+2*padding + 2 > width:
+                    width = len(line)+2*padding + 2
         start = [[0 for x in range(width-2)] for y in range(height-2)]
         p = 0
         for line in code:
@@ -61,34 +65,44 @@ def Game(path="",padding = pixelSize):
 
 
     else:
-        ran = False
-        height = int(input("How tall? ")) + 2 #extra for dead cells at edge
-        width  = int(input("How wide? ")) + 2
-        start = [[0 for x in range(width-2)] for y in range(height-2)]
+        ran = True
+        tempHeight = input("How many cells tall? (default = 100)\n")
 
-        for line in range(height-2):
-            text = input(f'Line {line+1}: Enter up to {width-2} characters (0 is dead, 1 is alive)  ')
-            if text == "go":
-                break
+        if tempHeight != "":  
+            height = int(tempHeight) + 2 #extra for dead cells at edge
+        else: height = 102
+        tempWidth = input("How many cells wide? (default = 100)\n")
+        if tempWidth != "":
+            width  = int(tempWidth) + 2
+        else: width = 102
 
-            if text == "random":
-                ran = True
-                break
+        enterPrompt = input("Would you like to specify a shape? yes/no (default = no)\n")
+        if enterPrompt.lower() in ["yes","y","yup"]:
+            ran = False
+            print(f"Enter up to {width-2} characters for each line, with 0 being a dead cell, 1 being an alive cell.\nType go once you are done entering lines.\nNote: input will be centred left-to-right, but not top-to-bottom.")
+            start = [[0 for x in range(width-2)] for y in range(height-2)]
+            for line in range(height-2):
+                text = input(f'Line{line+1:3d}:')
+                if text == "go":
+                    break
+                if text == "random":
+                    ran = True
+                    break
 
-            if not text.isnumeric():
-                text = "0"*width
+                if not text.isnumeric():
+                    text = "0"*width
 
-            elif len(text) < width:
-                steps = 0
-                text  = str(text)
-                while len(text) < width:
-                    if steps%2:
-                        text += "0" #right padding
-                        steps += 1
-                    else:
-                        text = "0" + text #left padding, alternating so the input is centred
-                        steps += 1
-            start[line][0:width-2] = [int(num) for num in text]
+                elif len(text) < width:
+                    steps = 0
+                    text  = str(text)
+                    while len(text) < width:
+                        if steps%2:
+                            text += "0" #right padding
+                            steps += 1
+                        else:
+                            text = "0" + text #left padding, alternating so the input is centred
+                            steps += 1
+                start[line][0:width-2] = [int(num) for num in text]
 
         if ran:
             start = [[random.randint(0,1) for x in range(width)] for y in range(height)]
@@ -100,16 +114,16 @@ def Game(path="",padding = pixelSize):
 
     for y in range(1,height-1):
             for x in range(1,width-1):
-                playarea[y][x] = Pixel(start[y-1][x-1],x,y)
+                playarea[y][x] = Pixel(start[y-1][x-1],x,y,pixelSize)
                 if start[y-1][x-1] == 1:
                     livingPixels += [playarea[y][x]]
 
-            playarea[y][0] = Pixel(0,0,y)
-            playarea[y][width-1] = Pixel(0,width-1,y) #edges dead
+            playarea[y][0] = Pixel(0,0,y,pixelSize)
+            playarea[y][width-1] = Pixel(0,width-1,y,pixelSize) #edges dead
 
     for x in range(width):
-        playarea[0][x] = Pixel(0,x,0)
-        playarea[-1][x] = Pixel(0,x,height-1) #top and bottom dead
+        playarea[0][x] = Pixel(0,x,0,pixelSize)
+        playarea[-1][x] = Pixel(0,x,height-1,pixelSize) #top and bottom dead
     running = True
 
     #the main loop!
@@ -144,5 +158,10 @@ def Game(path="",padding = pixelSize):
                         livingPixels += [playarea[y][x]]
                     else:
                         playarea[y][x].die()                 #add 1 to how long dead
-# Game()
-Game("/home/aisling/Documents/Coding/Github Projects/Life Files/2enginecordership.cells.txt",20)
+
+args = sys.argv
+if len(args) != 1: Game(*args[1:],20)
+else: Game()
+
+
+
