@@ -22,7 +22,8 @@ public class View extends Application {
         int boxWidth = 100;
         setUserAgentStylesheet(STYLESHEET_MODENA);
         FXMLLoader fxmlLoader = new FXMLLoader();
-        Parent root = fxmlLoader.load(Files.newInputStream(Paths.get(new URI(Objects.requireNonNull(getClass().getResource("Scene.fxml")).getPath()).getPath())));
+//        Parent root = fxmlLoader.load(Files.newInputStream(Paths.get(new URI(Objects.requireNonNull(getClass().getResource("Scene.fxml")).getPath()).getPath())));
+        Parent root = fxmlLoader.load(getClass().getResourceAsStream("Scene.fxml"));
         controller = fxmlLoader.getController();
         Scene scene = new Scene(root,811,600,true);
         controller.setup(n,boxWidth,scene,600);
