@@ -22,9 +22,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -174,10 +171,10 @@ public class Launcher extends Application {
         Image holeImage = null;
         Image logImage = null;
         try {
-            fireImage = new Image(Files.newInputStream(Paths.get(Objects.requireNonNull(getClass().getResource("images/fire.png")).getPath())));
-            holeImage = new Image(Files.newInputStream(Paths.get(Objects.requireNonNull(getClass().getResource("images/hole.png")).getPath())));
-            logImage = new Image(Files.newInputStream(Paths.get(Objects.requireNonNull(getClass().getResource("images/log.png")).getPath())));
-        } catch ( IOException e) {
+            fireImage = new Image(Launcher.class.getResourceAsStream("images/fire.png"));
+            holeImage = new Image(Launcher.class.getResourceAsStream("images/hole.png"));
+            logImage = new Image(Launcher.class.getResourceAsStream("images/log.png"));
+        } catch ( Exception e) {
             e.printStackTrace();
         }
         Obstacle fire = new Obstacle(1, 2, "F",fireImage);

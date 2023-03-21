@@ -1,14 +1,9 @@
 package boardGame.objects.obstacles;
 
+import boardGame.Launcher;
 import boardGame.objects.Board;
 import boardGame.objects.Piece;
 import javafx.scene.image.Image;
-import boardGame.Launcher;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Objects;
 
 /**
  * A special obstacle which causes the player to teleport to the other instance of this obstacle if they land on it.
@@ -22,9 +17,10 @@ public class Teleporter extends Obstacle {
 
     static {
         try {
-            orangeImage = new Image(Files.newInputStream(Paths.get(Objects.requireNonNull(Launcher.class.getResource("images/orangeportal.png")).getPath())));
-            blueImage = new Image(Files.newInputStream(Paths.get(Objects.requireNonNull(Launcher.class.getResource("images/blueportal.png")).getPath())));
-        } catch (IOException e) {
+            orangeImage = new Image(Launcher.class.getResourceAsStream("images/orangeportal.png"));
+            blueImage = new Image(Launcher.class.getResourceAsStream("images/blueportal.png"));
+        } catch (Exception
+                e) {
             throw new RuntimeException(e);
         }
     }
