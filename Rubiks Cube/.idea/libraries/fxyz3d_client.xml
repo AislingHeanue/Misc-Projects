@@ -1,0 +1,17 @@
+<component name="libraryTable">
+  <library name="fxyz3d.client" type="repository">
+    <properties maven-id="org.fxyz3d:fxyz3d-client:0.1.1" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/fxyz3d-client-0.1.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jcsg-0.4.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/vecmath-1.3.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/slf4j-simple-1.6.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/poly2tri-core-0.1.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/slf4j-api-1.6.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/controlsfx-8.40.12.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/reactfx-2.0-M5.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
