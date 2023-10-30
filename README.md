@@ -1,8 +1,8 @@
 # Projects
-Some miscellanious projects I have completed in the past.
+Some miscellaneous projects I have completed in the past.
 
 ## Board Game
-A projcect I completed as part of my Java programming course. The libraries used for this project are corretto-1.8_352 and Junit5.8.1, though any version of Java 1.8 with support for JavaFX should work.
+A project I completed as part of my Java programming course. The libraries used for this project are corretto-1.8_352 and Junit5.8.1, though any version of Java 1.8 with support for JavaFX should work.
 
 To run this program, first compile it and then do::
 
@@ -22,17 +22,10 @@ It can be run using the included JAR file. It was compiled with corretto-1.8_362
     $ java -Dprism.forceGPU=true -jar Rubiks\ Cube.jar
 
 ## Game of Life
-A simulator for Conway's Game of Life. To run it, make sure you have pygame installed with ``pip install pygame`` and then either do:
-
-    $ python Game\ of\ Life.py
-or
-
-    $ python Game\ of\ Life.py /path/to/txt/file
-
-if you would like to run one of the preloaded patterns. There are many more patterns available on the [Conway's Game of Life Wiki](https://conwaylife.com/wiki/) (download files in plaintext format for use here).
+A simulator for Conway's Game of Life. There isn't much of a user interface right now but for a demo with the default settings you can do `make run` inside Game of Life/Go. This requires Go and Make to be installed.
 
 ## Sine Graph Generator
-A simple script for generating the graph of some pendulum animtations. Its output is the GIF contained in its folder.
+A simple script for generating the graph of some pendulum animations. Its output is the GIF contained in its folder.
 
 ## QR Code Generator
-This notebook can generate QR codes for any prompts you give it up to a certain size. The arguments for its main function (which can be edited in the last line of the last cell) are the input string, the size of the QR Code (starting from 1, bigger nunbers create a larger QR code and can encode more data), and the level of data redundancy/correction (0 is lowest, 3 is highest). This code is a bit of a mess and I might refactor it later.
+This notebook can generate QR codes for any prompts you give it up to a certain size. The arguments for its main function (which can be edited in the last line of the last cell) are the input string, the size of the QR Code (starting from 1, bigger numbers create a larger QR code and can encode more data), and the level of data redundancy/correction (0 is lowest, 3 is highest). This code is a bit of a mess and I might refactor it later.
