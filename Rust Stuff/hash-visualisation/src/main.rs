@@ -1,13 +1,23 @@
-use hash_visualisation::{Node, NodeColour};
+use hash_visualisation::{Evaluate, NodeBoolean, NodeColour, NodeNumeric};
 fn main() {
-    let new_node = Box::new(Node::Add(
-        Box::new(Node::X),
-        Box::new(Node::Mult(Box::new(Node::Y), Box::new(Node::Number(-0.1)))),
+    let new_node = Box::new(NodeNumeric::Add(
+        Box::new(NodeNumeric::X),
+        Box::new(NodeNumeric::Mult(
+            Box::new(NodeNumeric::Y),
+            Box::new(NodeNumeric::Number(-0.1)),
+        )),
     ));
     let c = NodeColour {
         r: new_node,
-        g: Box::new(Node::Number(-0.3)),
-        b: Box::new(Node::Number(0.7)),
+        g: Box::new(NodeNumeric::If(
+            Box::new(NodeBoolean::GreaterThan(
+                Box::new(NodeNumeric::Number(0.2)),
+                Box::new(NodeNumeric::Number(0.3)),
+            )),
+            Box::new(NodeNumeric::X),
+            Box::new(NodeNumeric::Y),
+        )),
+        b: Box::new(NodeNumeric::Number(0.7)),
     };
 
     let (r, g, b) = c.eval(&0.5, &0.5).unwrap();
