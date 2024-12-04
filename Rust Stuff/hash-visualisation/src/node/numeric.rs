@@ -1,24 +1,13 @@
-use std::{
-    fmt::{Display, Formatter},
-    result::Result,
-};
+use nannou::rand::random_range;
 
-pub trait Evaluate {
-    type Output;
-    fn eval(&self, x: &f32, y: &f32) -> Result<Self::Output, &'static str>;
-}
+use crate::grammar::{Grammar, Resolve};
 
-pub enum Node {
-    Numeric(NodeNumeric),
-    Boolean(NodeBoolean),
-    Colour(NodeColour),
-}
-
-pub struct NodeColour {
-    pub r: Box<NodeNumeric>,
-    pub g: Box<NodeNumeric>,
-    pub b: Box<NodeNumeric>,
-}
+use super::Evaluate;
+use super::NodeBoolean;
+use std::fmt::Display;
+use std::fmt::Formatter;
+use std::ops::*;
+use std::result::Result;
 
 pub enum NodeNumeric {
     Number(f32),
@@ -27,18 +16,9 @@ pub enum NodeNumeric {
     X,
     Y,
     If(Box<NodeBoolean>, Box<NodeNumeric>, Box<NodeNumeric>),
+    Mod(Box<NodeNumeric>, Box<NodeNumeric>),
+    Grammar(String),
     RandomNumber,
-}
-
-pub enum NodeBoolean {
-    GreaterThan(Box<NodeNumeric>, Box<NodeNumeric>),
-    Equal(Box<NodeNumeric>, Box<NodeNumeric>),
-}
-
-impl Display for NodeColour {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Colour({}, {}, {})", self.r, self.g, self.b)
-    }
 }
 
 impl Display for NodeNumeric {
@@ -52,27 +32,10 @@ impl Display for NodeNumeric {
             NodeNumeric::If(cond, then, other) => {
                 write!(f, "If ({}) then ({}) else ({})", cond, then, other)
             }
+            NodeNumeric::Mod(first, second) => write!(f, "({} mod {})", first, second),
+            NodeNumeric::Grammar(s) => write!(f, "{}", s),
             NodeNumeric::RandomNumber => panic!("Random Number should not be printed"),
         }
-    }
-}
-
-impl Display for NodeBoolean {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        match self {
-            NodeBoolean::GreaterThan(first, second) => write!(f, "{} > {}", first, second),
-            NodeBoolean::Equal(first, second) => write!(f, "{} == {}", first, second),
-        }
-    }
-}
-
-impl Evaluate for NodeColour {
-    type Output = (u8, u8, u8);
-    fn eval(&self, x: &f32, y: &f32) -> Result<(u8, u8, u8), &'static str> {
-        let r = to_u8(self.r.eval(x, y)?)?;
-        let g = to_u8(self.g.eval(x, y)?)?;
-        let b = to_u8(self.b.eval(x, y)?)?;
-        Ok((r, g, b))
     }
 }
 
@@ -96,24 +59,47 @@ impl Evaluate for NodeNumeric {
                     other.eval(x, y)
                 }
             }
+            NodeNumeric::Mod(first, second) => Ok(first.eval(x, y)? % second.eval(x, y)?),
+            NodeNumeric::Grammar(_) => Err("Grammar branch must not be evaluated"),
             NodeNumeric::RandomNumber => Err("Random number must not be evaluated"),
         }
     }
 }
 
-impl Evaluate for NodeBoolean {
-    type Output = bool;
-    fn eval(&self, x: &f32, y: &f32) -> Result<bool, &'static str> {
+impl Resolve for NodeNumeric {
+    fn resolve(self, grammar: Grammar, depth: usize) -> Result<Box<Self>, &'static str> {
         match self {
-            NodeBoolean::GreaterThan(first, second) => Ok(first.eval(x, y)? > second.eval(x, y)?),
-            NodeBoolean::Equal(first, second) => Ok(first.eval(x, y)? == second.eval(x, y)?),
+            Self::RandomNumber => Ok(Box::new(NodeNumeric::Number((random_range(-1.0, 1.0))))),
+            NodeNumeric::Grammar(s) => {
+                Err("not implemented")
+                let list = grammar.branches.get(s);
+                // If depth is zero then match s to the grammar and pick the first option, and
+                // resolve it
+                // If depth is greater than zero then match s to the grammar, pick a random option
+                // based on chances, and resolve it
+            }
+            _ => Ok(Box::new(self)),
         }
     }
 }
 
-fn to_u8(i: f32) -> Result<u8, &'static str> {
-    if i < -1.0 || i > 1.0 {
-        return Err("x must be between -1 and 1");
+impl Add for NodeNumeric {
+    type Output = NodeNumeric;
+    fn add(self, other: Self) -> Self::Output {
+        Self::Add(Box::new(self), Box::new(other))
     }
-    Ok(((i + 1.0) * 128.0) as u8)
+}
+
+impl Mul for NodeNumeric {
+    type Output = NodeNumeric;
+    fn mul(self, other: Self) -> Self::Output {
+        Self::Mult(Box::new(self), Box::new(other))
+    }
+}
+
+impl Rem for NodeNumeric {
+    type Output = NodeNumeric;
+    fn rem(self, other: Self) -> Self::Output {
+        Self::Mod(Box::new(self), Box::new(other))
+    }
 }
