@@ -1,19 +1,6 @@
 # Projects
 Some miscellaneous projects I have completed in the past.
 
-## Board Game
-A project I completed as part of my Java programming course. The libraries used for this project are corretto-1.8_352 and Junit5.8.1, though any version of Java 1.8 with support for JavaFX should work.
-
-To run this program, first compile it and then do::
-
-    $ cd out/production/Simon-Race
-    $ java boardGame.Launcher
-
-then enter the board size and number of players.
-Alternatively, the included JAR file can be used.
-
-    $ java -jar Board_Game.jar
-
 ## Rubik's Cube simulator
 A 3D simulator for a 3x3 Rubik's Cube, with keyboard and mouse controls. Hold Shift to rotate a face anticlockwise, and hold Control to do a wide move. Press + and - to change the camera zoom.
 
