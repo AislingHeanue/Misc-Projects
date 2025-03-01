@@ -76,4 +76,4 @@ fabric.properties
 # End of https://mrkandreev.name/snippets/gitignore-generator/#Intellij
 
 Rust Stuff/*/target/
-Game of Life/Go/game
+Go Stuff/Game of Life v2/game

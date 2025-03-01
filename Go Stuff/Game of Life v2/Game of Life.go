@@ -48,7 +48,7 @@ func main() {
 	wallThickness := 200 // the very edges of the board are dead, but you can specify a buffer zone between the visible area and the boundary
 	speed := 1
 	random := false
-	filepath := "../Life Files/3enginecordershipgun.cells.txt"
+	filepath := "../../Python Stuff/Game of Life/Life Files/3enginecordershipgun.cells.txt"
 
 	paused := (filepath == "" && !random) // start in "editor mode" if not randomised and not loading a file
 	lg, err := initLifeGame(boardX, boardY, colourPeriod, trailLength, wallThickness, paused, float64(speed))
